@@ -1,4 +1,6 @@
-from src.models import Bill, Parameters, TenantSettlement, ApartmentSettlement, Transfer
+import json
+
+from src.models import Bill, Parameters, TenantSettlement, ApartmentSettlement, Transfer, BlacklistedTenant
 from src.manager import Manager
 
 
@@ -85,3 +87,28 @@ def test_apartment_has_any_bills():
 
     has_bills = manager.has_any_bills('apart-polanka', 2025, 3)
     assert has_bills == False
+
+def test_is_tenant_blacklisted(tmp_path):
+    manager = Manager(Parameters())
+
+    assert isinstance(manager.blacklist, list)
+    for entry in manager.blacklist:
+        assert isinstance(entry, BlacklistedTenant)
+
+    blacklist_file = tmp_path / "blacklist.json"
+    blacklist_data = [
+        {"name": "Marek Zły", "reason": "Zniszczenie wyposażenia"},
+        {"name": "Karolina Dłużnik", "reason": "Brak płatności przez 3 miesiące"},
+    ]
+    blacklist_file.write_text(json.dumps(blacklist_data), encoding="utf-8")
+
+    manager = Manager(Parameters(blacklist_json_path=str(blacklist_file)))
+
+    assert len(manager.blacklist) == 2
+    assert isinstance(manager.blacklist[0], BlacklistedTenant)
+    assert manager.blacklist[0].name == "Marek Zły"
+    assert manager.blacklist[0].reason == "Zniszczenie wyposażenia"
+
+    assert manager.is_tenant_blacklisted("Marek Zły") is True
+    assert manager.is_tenant_blacklisted("Karolina Dłużnik") is True
+    assert manager.is_tenant_blacklisted("Jan Nowak") is False
