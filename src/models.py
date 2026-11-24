@@ -104,7 +104,7 @@ class TenantSettlement(BaseModel):
     total_transfers_pln: float = 0.0
     balance_pln: float = 0.0
 
-
+# do naprawy
 class BlacklistedTenants(BaseModel):
     name: str
     reason: str

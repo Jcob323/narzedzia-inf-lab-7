@@ -1,3 +1,5 @@
+# do naprawy
+
 from src.models import Apartment, Bill, Parameters, Tenant, TenantSettlement, Transfer, ApartmentSettlement, BlacklistedTenants
 from typing import List, Tuple
 
