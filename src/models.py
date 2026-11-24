@@ -9,7 +9,7 @@ class Parameters(BaseModel):
     tenants_json_path: str = 'data/tenants.json'
     transfers_json_path: str = 'data/transfers.json'
     bills_json_path: str = 'data/bills.json'
-    blacklisted_json_path: str = 'data/blacklisted.json'
+    blacklisted_json_path: str = 'data/blacklist.json'
 
 
 class Room(BaseModel):
