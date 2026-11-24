@@ -9,7 +9,7 @@ class Parameters(BaseModel):
     tenants_json_path: str = 'data/tenants.json'
     transfers_json_path: str = 'data/transfers.json'
     bills_json_path: str = 'data/bills.json'
-    blacklisted_json_path: str = 'data/blacklisted.json'
+    blacklisted_json_path: str = 'data/blacklist.json'
 
 
 class Room(BaseModel):
@@ -104,7 +104,7 @@ class TenantSettlement(BaseModel):
     total_transfers_pln: float = 0.0
     balance_pln: float = 0.0
 
-
+# do naprawy
 class BlacklistedTenants(BaseModel):
     name: str
     reason: str
