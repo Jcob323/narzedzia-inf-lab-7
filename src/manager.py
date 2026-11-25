@@ -1,6 +1,4 @@
-# do naprawy
-
-from src.models import Apartment, Bill, Parameters, Tenant, TenantSettlement, Transfer, ApartmentSettlement, BlacklistedTenants
+from src.models import Apartment, Bill, Parameters, Tenant, TenantSettlement, Transfer, ApartmentSettlement, BlacklistedTenant
 from typing import List, Tuple
 
 class Manager:
@@ -11,7 +9,7 @@ class Manager:
         self.tenants = {}
         self.transfers = []
         self.bills = []
-        self.blacklisted_names = set()
+        self.blacklist = []
 
         self.load_data()
 
@@ -20,9 +18,7 @@ class Manager:
         self.tenants = Tenant.from_json_file(self.parameters.tenants_json_path)
         self.transfers = Transfer.from_json_file(self.parameters.transfers_json_path)
         self.bills = Bill.from_json_file(self.parameters.bills_json_path)
-        self.blacklisted_names = {
-            entry.name for entry in BlacklistedTenants.from_json_file(self.parameters.blacklisted_json_path)
-        }
+        self.blacklist = BlacklistedTenant.from_json_file(self.parameters.blacklist_json_path)
 
     def check_tenants_apartment_keys(self) -> bool:
         for tenant in self.tenants.values():
@@ -119,5 +115,5 @@ class Manager:
             raise ValueError("Apartment key does not exist")
         return any([bill for bill in self.bills if bill.apartment == apartment_key and bill.settlement_year == year and bill.settlement_month == month])
 
-    def is_blacklisted(self, tenant_name: str) -> bool:
-        return tenant_name in self.blacklisted_names
+    def is_tenant_blacklisted(self, tenant_name: str) -> bool:
+        return any(entry.name == tenant_name for entry in self.blacklist)

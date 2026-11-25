@@ -9,7 +9,7 @@ class Parameters(BaseModel):
     tenants_json_path: str = 'data/tenants.json'
     transfers_json_path: str = 'data/transfers.json'
     bills_json_path: str = 'data/bills.json'
-    blacklisted_json_path: str = 'data/blacklist.json'
+    blacklist_json_path: str = 'data/blacklist.json'
 
 
 class Room(BaseModel):
@@ -104,15 +104,14 @@ class TenantSettlement(BaseModel):
     total_transfers_pln: float = 0.0
     balance_pln: float = 0.0
 
-# do naprawy
-class BlacklistedTenants(BaseModel):
+class BlacklistedTenant(BaseModel):
     name: str
     reason: str
 
     @staticmethod
-    def from_json_file(file_path: str) -> List['BlacklistedTenants']:
+    def from_json_file(file_path: str) -> List['BlacklistedTenant']:
         data = None
         with open(file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
         assert isinstance(data, list), "Expected a list of blacklisted tenants"
-        return [BlacklistedTenants(**entry) for entry in data]
+        return [BlacklistedTenant(**entry) for entry in data]
